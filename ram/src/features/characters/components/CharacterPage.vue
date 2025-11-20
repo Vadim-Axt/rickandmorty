@@ -17,24 +17,40 @@ onMounted(() => {
   fetchPage(1)
 })
 
+
 function gotoPage(p: number) {
   if (p < 1 || p > store.totalPages) return
-  fetchPage(p)
+  store.currentPage = p
 }
 
 function loadMore() {
   const next = store.currentPage + 1
   if (next <= store.totalPages) {
-    fetchPage(next, true)
+    store.currentPage = next
   }
 }
 
-const pagedToShow = computed(() => filtered.value)
+const pagedToShow = computed(() => {
+  const pageSize = 24
+  const end = store.currentPage * pageSize
+  return filtered.value.slice(0, end)
+})
 
 const pagesToShow = computed(() => {
   const pages: number[] = []
   const total = store.totalPages || 1
-  for (let i = 1; i <= total; i++) pages.push(i)
+  const current = store.currentPage || 1
+  const maxVisible = 5
+
+  let start = Math.max(1, current - Math.floor(maxVisible / 2))
+  let end = start + maxVisible - 1
+
+  if (end > total) {
+    end = total
+    start = Math.max(1, end - maxVisible + 1)
+  }
+
+  for (let i = start; i <= end; i++) pages.push(i)
   return pages
 })
 </script>
@@ -60,7 +76,7 @@ const pagesToShow = computed(() => {
     </div>
 
     <!-- pagination controls -->
-    <nav v-if="store.totalPages > 1" class="mt-4">
+    <nav v-if="store.totalPages > 1" class="mt-4 variable-area ">
       <ul class="pagination">
         <li class="page-item" :class="{disabled: store.currentPage === 1}">
           <button class="page-link" @click="gotoPage(store.currentPage - 1)" :disabled="store.currentPage === 1">Prev</button>
@@ -79,4 +95,14 @@ const pagesToShow = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+  .variable-area {
+    width:  100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+</style>
 

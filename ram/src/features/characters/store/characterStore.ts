@@ -19,7 +19,7 @@ export const useCharactersStore = defineStore('Characters', () => {
         totalPages.value = pages
 
     }
-    function clear() {  1
+    function clear(): void {
         characters.value = []
         currentPage.value = 1
         totalPages.value = 0
@@ -33,7 +33,6 @@ export const useCharactersStore = defineStore('Characters', () => {
         setCharacters,
         appendCharacter,
         clear
-
     }
 }
 )

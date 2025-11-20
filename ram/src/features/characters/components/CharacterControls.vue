@@ -7,26 +7,24 @@ const {
   sortBy,
   sortDir,
   locationFilter,
-  fetchPage
+  fetchPage,
 } = useCharacters()
 
 function onSearch() {
-  // поиск по имени — серверный запрос
   fetchPage(1)
 }
 
 function onFilter() {
-  // фильтр статуса — серверный запрос
   fetchPage(1)
 }
 
 function onSort() {
-  // сортировка локальная — никакого fetch не нужно
+  // сортировка применяется реактивно через computed filtered,
+  // поэтому повторный запрос к API не требуется
 }
 
 function onLocationInput() {
-  // локальная фильтрация — достаточно обновления v-model
-  // filtered пересчитается автоматически
+  fetchPage(1)
 }
 </script>
 
@@ -55,9 +53,8 @@ function onLocationInput() {
 
     <div class="col-md-2">
       <select v-model="sortBy" @change="onSort" class="form-select">
-        <option :value="null">Без сортировки</option>
-        <option value="name">Сортировать: имя</option>
-        <option value="episodes">Сортировать: эпизоды</option>
+        <option value="name">Сортировать: по имени</option>
+        <option value="episodes">Сортировать: по кол-ву эпизодов</option>
       </select>
     </div>
 

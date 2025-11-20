@@ -12,3 +12,8 @@ export interface ApiCharacter {
     url: string
     created: string
 }
+export interface ApiLocation {
+    id: number;
+    name: string;
+    residents: string[],
+}
